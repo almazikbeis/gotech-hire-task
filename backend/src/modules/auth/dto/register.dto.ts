@@ -1,7 +1,6 @@
 import { IsString, MinLength, MaxLength } from 'class-validator';
 
-// This DTO is defined but never used - controllers use `body: any` instead
-export class CreateUserDto {
+export class RegisterDto {
   @IsString()
   @MinLength(3)
   @MaxLength(20)

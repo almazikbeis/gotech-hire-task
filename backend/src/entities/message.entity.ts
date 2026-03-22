@@ -1,21 +1,38 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import { User } from './user.entity';
+import { Room } from './room.entity';
 
 @Entity('messages')
 export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Index()
   @Column()
-  room_id: number; // should be @ManyToOne(() => Room) with proper relation
+  roomId: number;
 
+  @Index()
   @Column()
-  user_id: number; // should be @ManyToOne(() => User) with proper relation
+  userId: number;
 
   @Column('text')
   content: string;
 
-  @Column({ nullable: true })
-  senderName: string; // camelCase mixed with snake_case above
+  @ManyToOne(() => Room, (room) => room.messages, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'roomId' })
+  room: Room;
+
+  @ManyToOne(() => User, (user) => user.messages, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date;
